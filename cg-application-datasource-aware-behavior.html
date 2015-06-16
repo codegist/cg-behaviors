@@ -1,0 +1,25 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="cg-document-event-behavior.html">
+<link rel="import" href="cg-application-context-behavior.html">
+
+<script>
+var CGApplicationDataSourceAwareBehavior = {
+    properties:{
+        cgName: String,
+    },
+    fireDataRequest:function(options){
+        options.type = (options.typePrefix !== false ? (this.cgName || this.constructor.name) + "/" : "") + options.type;
+        options.el = this;
+        options.source = options.source || this;
+        options.params = options.params || {};
+        options.params.context = this.dataContext || {};
+        console.log(this.toString(), "fireDataRequest(type:"+options.type+", params:"+CG.Utils.Json.stringify(options.params, true, 100)+")");
+        this.fireDocument("cg-data-request", options.type, options, options.source);
+    },
+    isDataAware:function(){
+        return this.context.dataAware;
+    },
+};
+
+CG.ApplicationDataSourceAwareBehavior = [CGApplicationDataSourceAwareBehavior, CG.DocumentEventBehavior, CG.ApplicationContextBehavior];
+</script>

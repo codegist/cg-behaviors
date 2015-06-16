@@ -1,0 +1,16 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="cg-document-event-behavior.html">
+
+<script>
+var CGApplicationEventBehavior = {
+    created:function(){
+        this.listensTo("cg-application-event", this.onApplicationEvent);
+    },
+    fireApplicationEvent:function(type, params, source){
+        this.fireDocument("cg-application-event", type, params, source);
+    },
+    onApplicationEvent:function(type, event, e){}
+};
+
+CG.ApplicationEventBehavior = [CGApplicationEventBehavior, CG.DocumentEventBehavior];
+</script>

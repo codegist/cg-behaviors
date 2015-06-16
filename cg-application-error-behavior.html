@@ -1,0 +1,26 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="cg-document-event-behavior.html">
+
+<script>
+var CGApplicationErrorBehavior = {
+    properties:{
+        noCatchGlobal: {
+            type: Boolean,
+            value: false
+        },
+    },
+    created:function(){
+        this.listensTo("cg-application-error", this.onApplicationError);
+        window.onerror = function (errorMsg, url, lineNumber) {
+            if (this.noCatchGlobal) return;
+            return this.fireApplicationError("client-error", {error: errorMsg, url: url, lineNumber: lineNumber});
+        }.bind(this);
+    },
+    fireApplicationError:function(type, params, source){
+        this.fireDocument("cg-application-error", type, params, source);
+    },
+    onApplicationError:function(type, event, e){}
+};
+
+CG.ApplicationErrorBehavior = [CGApplicationErrorBehavior, CG.DocumentEventBehavior];
+</script>

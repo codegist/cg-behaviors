@@ -1,0 +1,68 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="cg-document-event-behavior.html">
+<link rel="import" href="cg-base-behavior.html">
+
+<script>
+var SHARED_CONTEXT = {};
+
+var CGApplicationContextBehavior = {
+    properties: {
+        context: {
+            value: SHARED_CONTEXT,
+            readOnly: true
+        },
+        dataContext: {
+            type: Object,
+            value:{},
+            readOnly: true
+        },
+    },
+    observers:[
+        "_contextChanged(context.*)",
+        "_dataContextChanged(dataContext.*)",
+    ],
+    created:function(){
+        this.listensTo("cg-context", this._onContextChangeEvent);
+    },
+    setContext: function (path, value, notifySubProps) {
+        path = "context." + path;
+        this.set(path, value);
+        this.fireDocument("cg-context", "changed", {
+            path: path,
+            value: value
+        }, this);
+//        if(notifySubProps) {
+//            notifySubProps.forEach(function(prop){
+//                this._fireApplication("cg-context", "changed", {
+//                    path:path + "." + prop,
+//                    value:value[prop]
+//                }, this);
+//            }.bind(this));
+//        }
+    },
+    _dataContextChanged: function (change) {
+        if(this._firstDataContextChangedPassed) {// todo this sucks KJDFJDSF
+            this.isAttached && this.onDataContextChanged(change.path, change.value);
+        }else{
+            this._firstDataContextChangedPassed = true;
+        }
+    },
+    _contextChanged: function (change) {
+        if(this._firstContextChangedPassed) {// todo this sucks KJDFJDSF
+            console.log(this.toString(), "_contextChanged", change.path, "=", CG.Utils.Json.stringify(change.value, true, 100));
+            this.isAttached && this.onContextChanged(change.path, change.value);
+        }else{
+            this._firstContextChangedPassed = true;
+        }
+    },
+    _onContextChangeEvent: function (type, event, e) {
+        if(event.source == this) return;
+        console.log(this.toString(), "_onContextChangeEvent", event.params.path, "=", CG.Utils.Json.stringify(event.params.value, true, 100));
+        this.notifyPath(event.params.path, event.params.value);
+    },
+    onContextChanged: function (path, value) {},
+    onDataContextChanged: function (path, value) {},
+};
+
+CG.ApplicationContextBehavior = [CGApplicationContextBehavior, CG.DocumentEventBehavior, CG.BaseBehavior];
+</script>
