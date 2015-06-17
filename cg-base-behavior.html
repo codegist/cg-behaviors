@@ -136,9 +136,6 @@
             o = args.shift();
             return this.isDefined(this.get(args, o));
         },
-        ifTrue:function(condition, trueValue, falseValue, commonValue){
-            return (condition ? trueValue : falseValue) + (commonValue || "");
-        },
         ifEqualsTo:function(a, b, trueValue, falseValue, commonValue){
             var args = Array.prototype.slice.call(arguments);
             var hasCommon = args.length % 2 == 1;
@@ -148,10 +145,10 @@
             falseValue = args[args.length - 1 - index];
             for(var i = 0; i<args.length - 2 - index; i += 2){
                 if(args[i] != args[i+1]) {
-                    return falseValue + commonValue;
+                    return (falseValue.trim() + " " + commonValue.trim()).trim();
                 }
             }
-            return trueValue + commonValue;
+            return (trueValue.trim() + " " + commonValue.trim()).trim();
         },
         ifNotEqualsTo:function(a, b, trueValue, falseValue, commonValue){
             var args = Array.prototype.slice.call(arguments);
@@ -162,16 +159,29 @@
             falseValue = args[args.length - 1 - index];
             for(var i = 0; i<args.length - 2 - index; i += 2){
                 if(args[i] == args[i+1]) {
-                    return falseValue + commonValue;
+                    return (falseValue.trim() + " " + commonValue.trim()).trim();
                 }
             }
-            return trueValue + commonValue;
+            return (trueValue.trim() + " " + commonValue.trim()).trim();
+        },
+        ifTrue:function(condition, trueValue, falseValue, commonValue){
+            // TODO String stuff is ugly
+            return String(String(condition ? trueValue || "" : falseValue || "").trim() + " " + String(commonValue || "").trim()).trim();
+        },
+        ifFalse:function(condition, trueValue, falseValue, commonValue){
+            return this.ifTrue(!condition, trueValue, falseValue, commonValue);
         },
         ifGreaterThan:function(a, b, trueValue, falseValue, commonValue){
-            return (a > b ? trueValue : falseValue) + (commonValue || "");
+            return this.ifTrue(a > b, trueValue, falseValue, commonValue);
         },
         ifLessThan:function(a, b, trueValue, falseValue, commonValue){
-            return (a < b ? trueValue : falseValue) + (commonValue || "");
+            return this.ifTrue(a < b, trueValue, falseValue, commonValue);
+        },
+        ifDefined:function(a, trueValue, falseValue, commonValue){
+            return this.ifTrue(this.isDefined(a), trueValue, falseValue, commonValue);
+        },
+        ifUndefined:function(a, trueValue, falseValue, commonValue){
+            return this.ifTrue(!this.isDefined(a), trueValue, falseValue, commonValue);
         },
         defaults:function(a, defaultValue){
             return this.isDefined(a) ? a : defaultValue;

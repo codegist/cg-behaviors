@@ -12,9 +12,8 @@ var CGApplicationContextBehavior = {
             readOnly: true
         },
         dataContext: {
-            type: Object,
             value:{},
-            readOnly: true
+//            readOnly: true,
         },
     },
     observers:[
@@ -23,6 +22,9 @@ var CGApplicationContextBehavior = {
     ],
     created:function(){
         this.listensTo("cg-context", this._onContextChangeEvent);
+    },
+    setDataContext: function (path, value) {
+        this.set("dataContext." + path, value);
     },
     setContext: function (path, value, notifySubProps) {
         path = "context." + path;
@@ -41,6 +43,7 @@ var CGApplicationContextBehavior = {
 //        }
     },
     _dataContextChanged: function (change) {
+        console.log(this.toString(), change.path + " - " + JSON.stringify(change.value))
         if(this._firstDataContextChangedPassed) {// todo this sucks KJDFJDSF
             this.isAttached && this.onDataContextChanged(change.path, change.value);
         }else{
