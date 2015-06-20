@@ -11,7 +11,7 @@ var CGDocumentEventBehavior = {
             callback:function(e){
                 e = e.originalEvent;
                 if(e.detail.source == this) return;
-                console.log(this.toString(), "receiving " + event + "[type:" + e.detail.type + "]");
+                console.log(this.toString(), "receiving", event, "[type:", e.detail.type, "]");
                 callback.call(this, e.detail.type, e.detail, e);
             }.bind(this),
             attached:false
@@ -55,7 +55,7 @@ var CGDocumentEventBehavior = {
         }
     },
     fireDocument:function(eventType, type, params, source){
-        console.log(this.toString(), "fireApplication(eventType:"+eventType+", type:"+type+", params:"+CG.Utils.Json.stringify(params, true, 40)+")");
+        console.log(this.toString(), "fireApplication(eventType:", eventType, ", type:", type, ", params:", CG.Utils.Json.stringify(params, true, 40), ")");
         this.asyncFire(eventType, {type:type, params:params, source:source || this}, {node:document});
     }
 };
