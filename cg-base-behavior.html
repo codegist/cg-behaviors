@@ -46,7 +46,7 @@
         listenOnce: function(event, fn, args) {
             var self = this;
             var listener = function() {
-                fn.apply(self, Array.prototype.slice.call(arguments).concat(args));
+                fn.apply(self, CG.Utils.Objects.toArray(arguments).concat(args));
                 this.removeEventListener(event, listener, false);
             };
             this.addEventListener(event, listener, false);
@@ -74,7 +74,7 @@
             return length > value;
         },
         or:function(conditions){
-            var args = Array.prototype.slice.call(arguments);
+            var args = CG.Utils.Objects.toArray(arguments);
             for(var i = 0; i < args.length; i++){
                 if(args[i]){
                     return true;
@@ -83,7 +83,7 @@
             return false;
         },
         falses:function(conditions){
-            var args = Array.prototype.slice.call(arguments);
+            var args = CG.Utils.Objects.toArray(arguments);
             for(var i = 0; i < args.length; i++){
                 if(args[i]){
                     return false;
@@ -95,7 +95,7 @@
             return a - b;
         },
         add:function(a, b){
-            var args = Array.prototype.slice.call(arguments);
+            var args = CG.Utils.Objects.toArray(arguments);
             var total = 0;
             for(var i = 0; i < args.length; i++){
                 total += Number(args[i]);
@@ -114,7 +114,7 @@
         style:function(key,val){
             if(arguments.length % 2 != 0) return;
             var style = "";
-            var args = Array.prototype.slice.call(arguments);
+            var args = CG.Utils.Objects.toArray(arguments);
             for(var i = 0; i < args.length; i = i + 2){
                 style += args[i] + ":" + args[i + 1] + ";";
             }
@@ -124,12 +124,12 @@
             return this.get(path, o) || defaultValue;
         },
         firstPropFound:function(o, paths){
-            var args = Array.prototype.slice.call(arguments);
+            var args = CG.Utils.Objects.toArray(arguments);
             args.splice(1,0,undefined);
             return this.firstPropFoundOrDefault.apply(this, args);
         },
         firstPropFoundOrDefault:function(o, defaultValue, paths){
-            var args = Array.prototype.slice.call(arguments);
+            var args = CG.Utils.Objects.toArray(arguments);
             var val;
             for(var i = 2;i < args.length; i++){
                 val = this.get(args[i], o);
@@ -138,17 +138,17 @@
             return val || defaultValue;
         },
         prop:function(o, path){
-            var args = Array.prototype.slice.call(arguments);
+            var args = CG.Utils.Objects.toArray(arguments);
             var o = args.shift();
             return this.get(args, o);
         },
         hasProp:function(o, path){
-            var args = Array.prototype.slice.call(arguments);
+            var args = CG.Utils.Objects.toArray(arguments);
             o = args.shift();
             return this.isDefined(this.get(args, o));
         },
         ifEqualsTo:function(a, b, trueValue, falseValue, commonValue){
-            var args = Array.prototype.slice.call(arguments);
+            var args = CG.Utils.Objects.toArray(arguments);
             var hasCommon = args.length % 2 == 1;
             commonValue = hasCommon ? (args[args.length - 1] || "") : "";
             var index = hasCommon ? 1 : 0;
@@ -162,7 +162,7 @@
             return (trueValue.trim() + " " + commonValue.trim()).trim();
         },
         ifNotEqualsTo:function(a, b, trueValue, falseValue, commonValue){
-            var args = Array.prototype.slice.call(arguments);
+            var args = CG.Utils.Objects.toArray(arguments);
             var hasCommon = args.length % 2 == 1;
             commonValue = hasCommon ? (args[args.length - 1] || "") : "";
             var index = hasCommon ? 1 : 0;
@@ -204,7 +204,7 @@
             return !this.isDefined(a);
         },
         concat:function(str1, str2){
-            return Array.prototype.slice.call(arguments).join('');
+            return CG.Utils.Objects.toArray(arguments).join('');
         },
     };
 
