@@ -1,8 +1,8 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../cg-utils/cg-utils.html">
+<link rel="import" href="cg-document-event-behavior.html">
 
 <script>
-    var id = 1;
     var CGBaseBehavior = {
         properties:{
             self:{
@@ -10,16 +10,24 @@
                 value:function(){return this;},
                 readOnly:true
             },
-            _cgbaseId: {
-                type: String,
-                value:function(){
-                    return id++;
-                },
-                readOnly: true
-            },
-            isAttached: Boolean,
         },
+        isAttached: false,
         utils:CG.Utils,
+        _cgbaseStatics : {
+            id:1
+        },
+        created:function(){
+            this._cgbaseId = this._cgbaseStatics.id++;
+        },
+        fireApplicationEvent:function(type, params, source){
+            this.fireDocument("cg-application-event", type, params, source);
+        },
+        fireApplicationLink:function(type, params, source){
+            this.fireDocument("cg-application-link", type, params, source);
+        },
+        fireApplicationError:function(type, params, source){
+            this.fireDocument("cg-application-error", type, params, source);
+        },
         attached: function () {
             this.isAttached = true;
         },
@@ -29,8 +37,11 @@
         getCGId:function(){
             return this._cgbaseId;
         },
+        getDisplayIdentifier:function(){
+            return this.constructor.name + "@" + this.getCGId();
+        },
         toString:function(){
-            return this._cgDisplayName ? this._cgDisplayName : this._cgDisplayName = "[" + this.constructor.name + "@" + this.getCGId() + "]";
+            return this._cgDisplayName || (this._cgDisplayName = "[" + this.getDisplayIdentifier() + "]");
         },
         listenOnce: function(event, fn, args) {
             var self = this;
@@ -42,7 +53,7 @@
         },
         doWhenConditionIsMet:function(callback, condition, waitTime){
             if(!condition.call(this)) {
-                this.debounce(this.constructor.name + "-waiting-for-condition", this.doWhenConditionIsMet.bind(this, callback, condition, waitTime), waitTime || 20)
+                this.debounce(this.getDisplayIdentifier() + "-waiting-for-condition", this.doWhenConditionIsMet.bind(this, callback, condition, waitTime), waitTime || 20)
             }else{
                 callback.call(this);
             }
@@ -189,10 +200,13 @@
         isDefined:function(a){
             return a != undefined && a != null;
         },
+        isUndefined:function(a){
+            return !this.isDefined(a);
+        },
         concat:function(str1, str2){
             return Array.prototype.slice.call(arguments).join('');
         },
     };
 
-    CG.BaseBehavior = [CGBaseBehavior];
+    CG.BaseBehavior = [CGBaseBehavior, CG.DocumentEventBehavior];
 </script>

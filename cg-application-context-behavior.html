@@ -21,7 +21,7 @@ var CGApplicationContextBehavior = {
         "_dataContextChanged(dataContext.*)",
     ],
     created:function(){
-        this.listensTo("cg-context", this._onContextChangeEvent);
+        this.listensTo("cg-context", this._onContextChangeEvent, true);
     },
     setDataContext: function (path, value) {
         this.set("dataContext." + path, value);
@@ -59,7 +59,6 @@ var CGApplicationContextBehavior = {
         }
     },
     _onContextChangeEvent: function (type, event, e) {
-        if(event.source == this) return;
         console.log(this.toString(), "_onContextChangeEvent", event.params.path, "=", CG.Utils.Json.stringify(event.params.value, true, 100));
         this.notifyPath(event.params.path, event.params.value);
     },
@@ -67,5 +66,5 @@ var CGApplicationContextBehavior = {
     onDataContextChanged: function (path, value) {},
 };
 
-CG.ApplicationContextBehavior = [CGApplicationContextBehavior, CG.DocumentEventBehavior, CG.BaseBehavior];
+CG.ApplicationContextBehavior = [CG.BaseBehavior, CGApplicationContextBehavior, CG.DocumentEventBehavior];
 </script>

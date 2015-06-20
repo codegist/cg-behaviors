@@ -2,15 +2,12 @@
 <link rel="import" href="cg-document-event-behavior.html">
 
 <script>
-var CGApplicationLinkBehavior = {
+var CGApplicationLinkListenerBehavior = {
     created:function(){
         this.listensTo("cg-application-link", this.onApplicationLink);
-    },
-    fireApplicationLink:function(type, params, source){
-        this.fireDocument("cg-application-link", type, params, source);
     },
     onApplicationLink:function(type, event, e){}
 };
 
-CG.ApplicationLinkBehavior = [CGApplicationLinkBehavior, CG.DocumentEventBehavior];
+CG.ApplicationLinkListenerBehavior = [CGApplicationLinkListenerBehavior, CG.DocumentEventBehavior];
 </script>

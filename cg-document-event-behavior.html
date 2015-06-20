@@ -1,14 +1,58 @@
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="cg-base-behavior.html">
+<link rel="import" href="../cg-utils/cg-utils.html">
 
 <script>
 var CGDocumentEventBehavior = {
-    listensTo:function(event, callback){
-        document.addEventListener(event, function(e){
-            if(e.detail.source == this) return;
-            console.log(this.toString(), "receiving "+event+"[type:"+e.detail.type+"]");
-            callback.call(this, e.detail.type, e.detail, e);
-        }.bind(this));
+    _cgEvtHandler:null,
+    _document:$(document),
+    listensTo:function(event, callback, attachNow){
+        this._cgEvtHandler = this._cgEvtHandler || {};
+        this._cgEvtHandler[event] = {
+            callback:function(e){
+                e = e.originalEvent;
+                if(e.detail.source == this) return;
+                console.log(this.toString(), "receiving " + event + "[type:" + e.detail.type + "]");
+                callback.call(this, e.detail.type, e.detail, e);
+            }.bind(this),
+            attached:false
+        };
+        if(attachNow == true) {
+            this._attachEvent(event);
+        }
+    },
+    _attachEvent:function(event){
+        var evtDesc = this._cgEvtHandler[event];
+        if(evtDesc.attached == false) {
+            console.log(this.toString(), "attaching event", event, ".");
+            this._document.on(event, evtDesc.callback);
+            evtDesc.attached = true;
+        }else{
+            console.log(this.toString(), "event", event, " already attached, ignoring.");
+        }
+    },
+    _detachEvent:function(event){
+        var evtDesc = this._cgEvtHandler[event];
+        if(evtDesc.attached == true) {
+            console.log(this.toString(), "detaching event", event, ".");
+            this._document.off(event, evtDesc.callback);
+            evtDesc.attached = false;
+        }else{
+            console.log(this.toString(), "event", event, " already detached, ignoring.");
+        }
+    },
+    attached:function(){
+        if(!this._cgEvtHandler) return;
+        console.log(this.toString(), "attaching.");
+        for(var event in this._cgEvtHandler){
+            this._attachEvent(event);
+        }
+    },
+    detached:function(){
+        if(!this._cgEvtHandler) return;
+        console.log(this.toString(), "detaching.");
+        for(var event in this._cgEvtHandler){
+            this._detachEvent(event);
+        }
     },
     fireDocument:function(eventType, type, params, source){
         console.log(this.toString(), "fireApplication(eventType:"+eventType+", type:"+type+", params:"+CG.Utils.Json.stringify(params, true, 40)+")");
@@ -16,5 +60,5 @@ var CGDocumentEventBehavior = {
     }
 };
 
-CG.DocumentEventBehavior = [CGDocumentEventBehavior, CG.BaseBehavior];
+CG.DocumentEventBehavior = [CGDocumentEventBehavior];
 </script>
