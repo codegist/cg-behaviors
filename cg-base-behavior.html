@@ -51,6 +51,18 @@
             };
             this.addEventListener(event, listener, false);
         },
+        querySelectAllRoot:function(selector){
+            return this.querySelectAll(selector, this.root);
+        },
+        querySelectRoot:function(selector){
+            return this.querySelect(selector, this.root);
+        },
+        querySelectAll:function(selector, scope){
+            return CG.Utils.Objects.toArray(Polymer.dom(scope || this).querySelectorAll(selector));
+        },
+        querySelect:function(selector, scope){
+            return Polymer.dom(scope || this).querySelector(selector);
+        },
         doWhenConditionIsMet:function(callback, condition, waitTime){
             if(!condition.call(this)) {
                 this.debounce(this.getDisplayIdentifier() + "-waiting-for-condition", this.doWhenConditionIsMet.bind(this, callback, condition, waitTime), waitTime || 20)

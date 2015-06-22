@@ -12,7 +12,9 @@ var CGApplicationContextBehavior = {
             readOnly: true
         },
         dataContext: {
-            value:{},
+            value:function(){
+                return {};
+            },
 //            readOnly: true,
         },
     },
@@ -21,6 +23,9 @@ var CGApplicationContextBehavior = {
         "_dataContextChanged(dataContext.*)",
     ],
     created:function(){
+//        this.async(function(){
+//            this.dataContext = {};
+//        });
         this.listensTo("cg-context", this._onContextChangeEvent, true);
     },
     setDataContext: function (path, value) {
