@@ -17,7 +17,7 @@ var CGApplicationDataSourceAwareBehavior = {
         this.fireDocument("cg-data-request", options.type, options, options.source);
     },
     isDataAware:function(){
-        return this.context.dataAware;
+        return this.get("config.dataAware", this.context);
     },
 };
 

@@ -23,32 +23,21 @@ var CGApplicationContextBehavior = {
         "_dataContextChanged(dataContext.*)",
     ],
     created:function(){
-//        this.async(function(){
-//            this.dataContext = {};
-//        });
         this.listensTo("cg-context", this._onContextChangeEvent, true);
     },
     setDataContext: function (path, value) {
         this.set("dataContext." + path, value);
     },
-    setContext: function (path, value, notifySubProps) {
+    setContext: function (path, value) {
         path = "context." + path;
         this.set(path, value);
         this.fireDocument("cg-context", "changed", {
             path: path,
             value: value
         }, this);
-//        if(notifySubProps) {
-//            notifySubProps.forEach(function(prop){
-//                this._fireApplication("cg-context", "changed", {
-//                    path:path + "." + prop,
-//                    value:value[prop]
-//                }, this);
-//            }.bind(this));
-//        }
     },
     _dataContextChanged: function (change) {
-        console.log(this.toString(), change.path + " - " + JSON.stringify(change.value))
+        console.log(this.toString(), change.path + " - " + JSON.stringify(change.value));
         if(this._firstDataContextChangedPassed) {// todo this sucks KJDFJDSF
             this.isAttached && this.onDataContextChanged(change.path, change.value);
         }else{
