@@ -1,4 +1,5 @@
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="cg-base-behavior.html">
 <link rel="import" href="cg-document-event-behavior.html">
 
 <script>
@@ -13,11 +14,13 @@ var CGApplicationErrorListenerBehavior = {
         this.listensTo("cg-application-error", this.onApplicationError);
         window.onerror = function (errorMsg, url, lineNumber) {
             if(this.noCatchGlobal) return;
-            return this.fireApplicationError("client-error", {error: errorMsg, url: url, lineNumber: lineNumber});
+            return this.fireApplicationError("client-error", {error: errorMsg, url: url, lineNumber: lineNumber}, window);
         }.bind(this);
     },
-    onApplicationError:function(type, event, e){}
+    onApplicationError:function(type, event, e){
+        console.log("")
+    }
 };
 
-CG.ApplicationErrorListenerBehavior = [CGApplicationErrorListenerBehavior, CG.DocumentEventBehavior];
+CG.ApplicationErrorListenerBehavior = [CG.BaseBehavior, CGApplicationErrorListenerBehavior, CG.DocumentEventBehavior];
 </script>

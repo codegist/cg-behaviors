@@ -1,4 +1,5 @@
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="cg-base-behavior.html">
 <link rel="import" href="cg-document-event-behavior.html">
 
 <script>
@@ -9,5 +10,5 @@ var CGApplicationEventListenerBehavior = {
     onApplicationEvent:function(type, event, e){}
 };
 
-CG.ApplicationEventListenerBehavior = [CGApplicationEventListenerBehavior, CG.DocumentEventBehavior];
+CG.ApplicationEventListenerBehavior = [CG.BaseBehavior, CGApplicationEventListenerBehavior, CG.DocumentEventBehavior];
 </script>
