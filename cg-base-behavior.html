@@ -94,6 +94,15 @@
             }
             return false;
         },
+        trues:function(conditions){
+            var args = CG.Utils.Objects.toArray(arguments);
+            for(var i = 0; i < args.length; i++){
+                if(!args[i]){
+                    return false;
+                }
+            }
+            return true;
+        },
         falses:function(conditions){
             var args = CG.Utils.Objects.toArray(arguments);
             for(var i = 0; i < args.length; i++){
