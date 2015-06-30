@@ -123,6 +123,16 @@
             }
             return total;
         },
+        equalsToAny:function(a,b,c) {
+            var args = CG.Utils.Objects.toArray(arguments);
+            var value = args.splice(0, 1)[0];
+            for(var i = 0; i < args.length; i++){
+                if(value == args[i]) {
+                    return true;
+                }
+            }
+            return false;
+        },
         equals:function(a,b) {
             return a == b;
         },
